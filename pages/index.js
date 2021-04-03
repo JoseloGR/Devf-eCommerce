@@ -4,7 +4,6 @@ import Products from "../components/products";
 export default function Home({products}) {
   return (
     <Container>
-      Home Page
       <Products products={products}/>
     </Container>
   )
