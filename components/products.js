@@ -2,7 +2,7 @@ import Product from './product';
 
 const Products = (props) => {
   return (
-    <div className="flex flex-wrap">
+    <div className="flex flex-wrap items-start justify-around">
       {
         props.products.map(
           product => (

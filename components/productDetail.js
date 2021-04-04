@@ -13,8 +13,8 @@ const ProductDetail = ({ product }) => {
         <div className="flex-auto flex justify-center w-full md:w-1/2 bg-white shadow p-4">
           {
             product.image ?
-              <img className={`${product.image ? '' : 'hidden'} w-auto h-96 object-center transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105 cursor-pointer`} src={product.image} /> :
-              <Image className={`${product.image ? 'hidden' : ''} w-auto h-96 object-center`} src="/placeholder-300x150.png" width="395" height="224" alt="Product Image" />
+              <img className="w-auto h-96 object-center transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105 cursor-pointer" src={product.image} /> :
+              <Image className="-auto h-96 object-center" src="/placeholder-300x150.png" width="395" height="224" alt="Product Image" />
           }
         </div>
         <div className="flex-auto w-full md:w-1/2 bg-white shadow p-4">
