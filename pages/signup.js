@@ -119,18 +119,27 @@ const SignUpForm = () => {
                     id="birth_date" 
                     name="birth_date"
                     {...register("birth_date")}
-                    type="text" 
-                    placeholder="dd/mm/yyyy"/>
+                    type="date" 
+                    placeholder="mm/dd/yyyy"/>
           </div>
           <div className="w-full px-3 mb-3">
             <label htmlFor="gender" 
-                    className="tracking-wide text-black text-xs font-bold mb-2">Género</label>
-            <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" 
-                    id="gender" 
-                    name="gender"
-                    {...register("gender")}
-                    type="text" 
-                    placeholder="Seleccione"/>
+                    className="tracking-wide text-black text-xs font-bold mb-2">Sexo</label>
+            <div class="relative">
+              <select className="block appearance-none w-full bg-gray-200 border border-gray-200 text-black py-3 px-4 pr-8 rounded leading-tight focus:outline-none" 
+                      id="gender"
+                      name="gender"
+                      defaultValue=""
+                      {...register("gender")}>
+                <option value="" disabled>Selecciona</option>
+                <option value="M">Hombre</option>
+                <option value="F">Mujer</option>
+                <option value="X">Otro</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+              </div>
+            </div>
           </div>
           <div className="w-full px-3 mb-3">
             <button type="submit"
