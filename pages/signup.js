@@ -1,56 +1,113 @@
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import Container from "../components/container";
+import ErrorMessage from '../components/errorMessage';
+import SuccessMessage from '../components/successMessage';
 
 const SignUpForm = () => {
-  const registerUser = async event => {
-    event.preventDefault();
-    console.log(event.target.name);
+  const [showError, setShowError] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const { register, handleSubmit, formState: {errors} } = useForm();
+  
+  const onSubmit = async data => {
+    Object.keys(data).forEach((k) => (data[k] === '' || data[k] == null) && delete data[k]);
+    const res = await fetch(
+      'https://ecomerce-master.herokuapp.com/api/v1/signup',
+      {
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST'
+      }
+    );
+    if (res.status == 200) {
+      setShowError(false);
+      setShowSuccess(true);
+      const result = await res.json();
+    } else {
+      setShowError(true);
+    }
   }
 
   return (
     <Container>
       <div className="grid grid-cols-1 md:grid-cols-6 p-4">
-        <form onSubmit={registerUser} className="flex-auto flex flex-col md:col-start-2 md:col-span-4 lg:col-start-3 lg:col-span-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex-auto flex flex-col md:col-start-2 md:col-span-4 lg:col-start-3 lg:col-span-3">
           <div className="w-full px-3 mb-3">
             <label htmlFor="first_name" 
-                    className="tracking-wide text-black text-xs font-bold mb-2">Nombre</label>
+                    className="tracking-wide text-black text-xs font-bold mb-2">Nombre *</label>
             <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" 
                     id="first_name" 
+                    name="first_name"
+                    {...register("first_name", {required:true})}
                     type="text" 
-                    placeholder="Juan" 
-                    required/>
+                    placeholder="Juan"/>
+            {
+              errors.first_name && 
+              <ErrorMessage>
+                {errors.first_name.type === 'required' && 'El nombre es requerido'}
+              </ErrorMessage> 
+            }
           </div>
           <div className="w-full px-3 mb-3">
             <label htmlFor="last_name" 
-                    className="tracking-wide text-black text-xs font-bold mb-2">Apellidos</label>
+                    className="tracking-wide text-black text-xs font-bold mb-2">Primer Apellido *</label>
             <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" 
-                    id="last_name" 
+                    id="last_name"
+                    name="last_name"
+                    {...register("last_name", {required:true})}
                     type="text" 
-                    placeholder="López" 
-                    required/>
+                    placeholder="López"/>
+            {
+              errors.last_name && 
+              <ErrorMessage>
+                {errors.last_name.type === 'required' && 'El apellido es requerido'}
+              </ErrorMessage> 
+            }
           </div>
           <div className="w-full px-3 mb-3">
             <label htmlFor="email" 
-                    className="tracking-wide text-black text-xs font-bold mb-2">Correo electrónico</label>
+                    className="tracking-wide text-black text-xs font-bold mb-2">Correo electrónico *</label>
             <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" 
                     id="email" 
-                    type="email" 
-                    placeholder="juanlopez@correo.com" 
-                    required/>
+                    name="email"
+                    {...register("email", {required:true, pattern: /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i})}
+                    type="text" 
+                    placeholder="juanlopez@correo.com"/>
+            {
+              errors.email && 
+              <ErrorMessage>
+                {errors.email.type === 'required' && 'El correo electrónico es requerido'}
+                {errors.email.type === 'pattern' && 'Ingrese un correo electrónico válido'}
+              </ErrorMessage> 
+            }
           </div>
           <div className="w-full px-3 mb-3">
             <label htmlFor="password" 
-                    className="tracking-wide text-black text-xs font-bold mb-2">Contraseña</label>
+                    className="tracking-wide text-black text-xs font-bold mb-2">Contraseña *</label>
             <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" 
                     id="password" 
+                    name="password"
+                    {...register("password", {required:true, minLength: 8, pattern: /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\!\@\#\$\%\^\&\*\.,:])([a-zA-Z0-9])+/})}
                     type="password" 
-                    placeholder="ContraseñaSuperSegura" 
-                    required/>
+                    placeholder="ContraseñaSuperSegura"/>
+            {
+              errors.password && 
+              <ErrorMessage>
+                {errors.password.type === 'required' && 'La contraseña es requerida'}
+                {errors.password.type === 'minLength' && 'Debe contener por lo menos 8 caracteres'}
+                {errors.password.type === 'pattern' && 'Debe contener por lo menos una mayúscula, una minúscula, un número y un caracter especial como: !@#$%^&*.,:'}
+              </ErrorMessage> 
+            }
           </div>
           <div className="w-full px-3 mb-3">
             <label htmlFor="profile_img" 
                     className="tracking-wide text-black text-xs font-bold mb-2">Foto de perfil</label>
             <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" 
                     id="profile_img" 
+                    name="profile_img"
+                    {...register("profile_img")}
                     type="text" 
                     placeholder="Foto de perfil"/>
           </div>
@@ -59,6 +116,8 @@ const SignUpForm = () => {
                     className="tracking-wide text-black text-xs font-bold mb-2">Fecha de nacimiento</label>
             <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" 
                     id="birth_date" 
+                    name="birth_date"
+                    {...register("birth_date")}
                     type="text" 
                     placeholder="dd/mm/yyyy"/>
           </div>
@@ -67,13 +126,31 @@ const SignUpForm = () => {
                     className="tracking-wide text-black text-xs font-bold mb-2">Género</label>
             <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" 
                     id="gender" 
+                    name="gender"
+                    {...register("gender")}
                     type="text" 
                     placeholder="Seleccione"/>
           </div>
-          <button type="submit"
-                  className="bg-white rounded-sm text-gray hover:bg-green-600 hover:border-green-600 hover:text-white py-2 my-2 w-full">
-                    Registrarme
-          </button>
+          <div className="w-full px-3 mb-3">
+            <button type="submit"
+                    className="bg-white rounded-sm text-gray border-gray border hover:bg-green-600 hover:border-green-600 hover:text-white py-2 my-2 w-full">
+                      Registrarme
+            </button>
+          </div>
+          {
+            showError ?
+            <div className="w-full px-3 mb-3">
+              <ErrorMessage>Verifique que sus datos sean correctos</ErrorMessage>
+            </div> :
+            <></>
+          }
+          {
+            showSuccess ?
+            <div className="w-full px-3 mb-3">
+              <SuccessMessage>Su cuenta ha sido creada exitosamente</SuccessMessage>
+            </div> :
+            <></>
+          }
         </form>
       </div>
     </Container>
