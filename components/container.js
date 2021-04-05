@@ -1,9 +1,8 @@
 import { Fragment } from "react";
 import Head from "next/head";
-import Link from 'next/link';
 import Navigation from "./navigation";
 
-export default function Container({children}) {
+export default function Container(props) {
   return (
     <Fragment>
       <Head>
@@ -12,9 +11,9 @@ export default function Container({children}) {
           rel="stylesheet"
           key="font" />
       </Head>
-      <Navigation/>
+      <Navigation profile={props.profile}/>
       <div className="container mx-auto mt-10">
-        {children}
+        {props.children}
       </div>
     </Fragment>
   );

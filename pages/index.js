@@ -1,9 +1,9 @@
 import Container from "../components/container";
 import Products from "../components/products";
 
-export default function Home({products}) {
+export default function Home({products, profile}) {
   return (
-    <Container>
+    <Container profile={profile}>
       <div className="grid grid-cols-1 md:grid-cols-6">
         <div className="bg-blueGray-500">
           <p>Filtros</p>
@@ -16,7 +16,22 @@ export default function Home({products}) {
   )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({req}) {
+  let profile = {};
+  if (req.headers.cookie) {
+    const resP = await fetch(
+      `${process.env.HOST}${process.env.VERSION}${process.env.ME}`,
+      {
+        headers: {
+          'Authorization': `JWT ${req.headers.cookie.slice(6)}`
+        },
+        method: 'GET'
+      }
+    );
+    if (resP.status == 200) {
+      profile = await resP.json();
+    }
+  }
   const response = await fetch(`${process.env.HOST}${process.env.VERSION}${process.env.PRODUCTS}`);
   const products = await response.json();
   products.map(product => {
@@ -28,7 +43,8 @@ export async function getServerSideProps() {
   });
   return {
     props: {
-      products
+      products,
+      profile
     }
   }
 }

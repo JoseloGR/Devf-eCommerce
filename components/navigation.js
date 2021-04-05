@@ -2,7 +2,7 @@ import { useState } from "react";
 import cookie from 'js-cookie';
 import { useRouter } from 'next/router';
 
-export default function Navigation() {
+export default function Navigation({profile}) {
   const [activeProfile, setActiveProfile] = useState(false);
   const [activeMenu, setActiveMenu] = useState(false);
   const router = useRouter();
@@ -69,8 +69,8 @@ export default function Navigation() {
                   </button>
                 </div>      
                 <div className={`${activeProfile ? '': 'hidden'} origin-top-right absolute right-0 mt-2 w-48 rounded shadow-lg py-1 bg-white ring-1 ring-gray-50 ring-opacity-5 focus:outline-none z-10`} role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Perfil</a>
-                  <a href="javascript:void(0)" onClick={logoutClick} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cerrar Sesión</a>
+                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Bienvenid@ {profile && profile.user && profile.user.first_name && profile.user.first_name}</a>
+                  <a href="#" onClick={logoutClick} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Cerrar Sesión</a>
                 </div>
               </div>
             </div> :
