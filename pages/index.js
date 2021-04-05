@@ -5,8 +5,7 @@ export default function Home({products, profile}) {
   return (
     <Container profile={profile}>
       <div className="grid grid-cols-1 md:grid-cols-6">
-        <div className="bg-blueGray-500">
-          <p>Filtros</p>
+        <div>
         </div>
         <div className="md:col-span-5">
           <Products products={products}/>
