@@ -1,13 +1,14 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import cookie from 'js-cookie';
 import Container from "../components/container";
 import ErrorMessage from '../components/errorMessage';
 
 const LogIn = () => {
   const [showError, setShowError] = useState(false);
   const { register, handleSubmit, formState: {errors} } = useForm();
-  const router = useRouter()
+  const router = useRouter();
   
   const onSubmit = async data => {
     const res = await fetch(
@@ -23,6 +24,9 @@ const LogIn = () => {
     if (res.status == 200) {
       setShowError(false);
       const result = await res.json();
+      cookie.set('token', result.token, {
+        expires: 1800
+      });
       router.push('/');
     } else {
       setShowError(true);
