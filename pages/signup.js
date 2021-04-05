@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Container from "../components/container";
@@ -147,7 +148,14 @@ const SignUpForm = () => {
           {
             showSuccess ?
             <div className="w-full px-3 mb-3">
-              <SuccessMessage>Su cuenta ha sido creada exitosamente</SuccessMessage>
+              <SuccessMessage>
+                Su cuenta ha sido creada exitosamente. &nbsp;
+                <Link href="/login">
+                  <a className="text-green-900 underline">
+                    Haga click aquí para iniciar sesión
+                  </a>
+                </Link>
+                </SuccessMessage>
             </div> :
             <></>
           }
