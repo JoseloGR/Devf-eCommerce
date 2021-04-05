@@ -2,8 +2,14 @@ import Image from "next/image";
 import Link from "next/link"
 import cookie from 'js-cookie';
 import ErrorMessage from './errorMessage';
+import SuccessMessage from "./successMessage";
+import { useState } from "react";
 
 const ProductDetail = ({ product }) => {
+  const [activeMessage, setActiveMessage] = useState(false);
+  
+  const buyClick = () => setActiveMessage(true)
+
   return (
     <>
       <div className="p-2">
@@ -33,21 +39,32 @@ const ProductDetail = ({ product }) => {
             <h2 className="px-2 text-md">Precio: {product.price ? `$${product.price}` : 'Precio no disponible'}</h2>
           </div>
           <div className="flex flex-col items-center mt-4">
-            <button disabled={!product.price || !cookie.get('token') ? 'disabled': null} className="bg-green-500 active:bg-green-600 disabled:opacity-50 rounded-lg text-white flex-auto p-2 w-full md:w-1/2 mt-4 mb-4">Comprar ahora</button>
+            <button onClick={buyClick} disabled={!product.price || !cookie.get('token') ? 'disabled': null} className="bg-green-500 active:bg-green-600 disabled:opacity-50 rounded-lg text-white flex-auto p-2 w-full md:w-1/2 mt-4 mb-4">Comprar ahora</button>
+            {
+              activeMessage ?
+              <div className="flex-auto">
+                <SuccessMessage>
+                  ¡Tu pedido ha sido registrado! Gracias por tu compra
+                </SuccessMessage> 
+              </div> :
+              <></>
+            }
             {
               !cookie.get('token') ?
-              <ErrorMessage>
-                <Link href="/login">
-                  <a className="text-red-900 underline">
-                    Inicie sesión
-                  </a>
-                </Link>&nbsp; o &nbsp;
-                <Link href="/signup">
-                  <a className="text-red-900 underline">
-                    Regístrese para realizar la compra
-                  </a>
-                </Link>
-              </ErrorMessage> :
+              <div className="flex-auto">
+                <ErrorMessage>
+                  <Link href="/login">
+                    <a className="text-red-900 underline">
+                      Inicie sesión
+                    </a>
+                  </Link>&nbsp; o &nbsp;
+                  <Link href="/signup">
+                    <a className="text-red-900 underline">
+                      Regístrese para realizar la compra
+                    </a>
+                  </Link>
+                </ErrorMessage> 
+              </div> :
               <></>
             }
           </div>
