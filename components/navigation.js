@@ -18,6 +18,7 @@ export default function Navigation({profile}) {
   const logoutClick = () => {
     cookie.remove('token');
     handleProfileClick();
+    router.push('/')
   }
 
   return (
@@ -65,7 +66,11 @@ export default function Navigation({profile}) {
                 <div>
                   <button onClick={handleProfileClick} type="button" className="bg-gray-100 flex text-sm rounded-full focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-offset-white focus:ring-white" id="user-menu" aria-expanded="false" aria-haspopup="true">
                     <span className="sr-only">Open user menu</span>
-                    <img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""/>
+                    {
+                      (profile && profile.user && profile.user.profile_img) ?
+                      <img className="h-8 w-8 rounded-full" src={profile.user.profile_img} alt="Foto de perfil"/> :
+                      <img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""/>
+                    }
                   </button>
                 </div>      
                 <div className={`${activeProfile ? '': 'hidden'} origin-top-right absolute right-0 mt-2 w-48 rounded shadow-lg py-1 bg-white ring-1 ring-gray-50 ring-opacity-5 focus:outline-none z-10`} role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
