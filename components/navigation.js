@@ -1,10 +1,14 @@
 import { useState } from "react";
-import cookie from 'js-cookie';
 import { useRouter } from 'next/router';
+import cookie from 'js-cookie';
+import { useForm } from 'react-hook-form';
+import useSearchContext from "../contexts/store";
 
 export default function Navigation({profile}) {
+  const {searchState, setSearchState } = useSearchContext();
   const [activeProfile, setActiveProfile] = useState(false);
   const [activeMenu, setActiveMenu] = useState(false);
+  const { register, handleSubmit } = useForm();
   const router = useRouter();
 
   const handleProfileClick = () => {
@@ -19,6 +23,10 @@ export default function Navigation({profile}) {
     cookie.remove('token');
     handleProfileClick();
     router.push('/')
+  }
+
+  const onSubmit = async data => {
+    setSearchState(data.search);
   }
 
   return (
@@ -43,12 +51,14 @@ export default function Navigation({profile}) {
             </div>
             <div className="flex-grow hidden sm:block sm:ml-6">
               <div className="flex justify-start">
-                <span className="inset-y-0 left-0 flex items-center pl-2">
-                  <button className="p-1 focus:outline-none focus:shadow-outline">
-                    <svg fill="none" stroke="gray" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" className="w-6 h-6"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                  </button>
-                </span>
-                <input type="text" className="focus:outline-white text-lg p-2 w-3/4 max-w-full" placeholder="¿Qué necesitas el día de hoy?"/>
+                <form onSubmit={handleSubmit(onSubmit)} className="flex-auto flex">
+                  <span className="inset-y-0 left-0 flex items-center pl-2">
+                    <button type="submit" className="p-1 focus:outline-none focus:shadow-outline">
+                      <svg fill="none" stroke="gray" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" className="w-6 h-6"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </button>
+                  </span>
+                  <input {...register("search", {required:true})} type="text" id="search" className="focus:outline-white text-lg p-2 w-3/4 max-w-full" placeholder="¿Qué necesitas el día de hoy?"/>
+                </form>
               </div>
             </div>
           </div>
