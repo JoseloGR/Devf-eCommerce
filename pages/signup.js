@@ -8,10 +8,14 @@ import SuccessMessage from '../components/successMessage';
 const SignUpForm = () => {
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [profilePicture, setProfilePicture] = useState('');
   const { register, handleSubmit, formState: {errors} } = useForm();
   
   const onSubmit = async data => {
     Object.keys(data).forEach((k) => (data[k] === '' || data[k] == null) && delete data[k]);
+    if ('profile_img' in data) {
+      data['profile_img'] = profilePicture;
+    }
     const res = await fetch(
       'https://ecomerce-master.herokuapp.com/api/v1/signup',
       {
@@ -28,6 +32,19 @@ const SignUpForm = () => {
       const result = await res.json();
     } else {
       setShowError(true);
+    }
+  }
+
+  const onChangeFile = event => {
+    let reader = new FileReader();
+    if ( event.target.files && event.target.files.length > 0) {
+      let file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const image = reader.result.toString();
+        setProfilePicture(image);
+        return image;
+      }
     }
   }
 
@@ -109,8 +126,9 @@ const SignUpForm = () => {
                     id="profile_img" 
                     name="profile_img"
                     {...register("profile_img")}
-                    type="text" 
-                    placeholder="Foto de perfil"/>
+                    type="file" 
+                    accept="image/*"
+                    onChange={ (e) => onChangeFile(e)}/>
           </div>
           <div className="w-full px-3 mb-3">
             <label htmlFor="birth_date" 
